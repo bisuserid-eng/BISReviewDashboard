@@ -4,29 +4,67 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BIS Review Dashboard – Haryana</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--blue:#2f5bea;--green:#1f9d68;--amber:#d88900;--red:#c9302c}
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{background:#162447;color:#fff;padding:22px 30px;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #0002}
-header h1{margin:0 0 5px;font-size:24px}header p{margin:0;color:#d9e2ff;font-size:13px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav button{border:1px solid #ffffff40;background:#ffffff12;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}nav button.active{background:#fff;color:#162447}
-main{padding:22px 30px;max-width:1600px;margin:auto}.section{display:none}.section.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 2px 8px #1018280a}
-.kpi .value{font-size:26px;font-weight:750;margin-top:6px}.label{font-size:12px;color:var(--muted)}.sub{font-size:11px;color:var(--muted);margin-top:8px}
-h2{margin:6px 0 14px;font-size:20px}h3{font-size:15px;margin:0 0 8px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+:root{--bg:#f3f5fa;--card:#fff;--text:#172033;--muted:#66738a;--line:#e4e8f0;--blue:#2f5bea;--navy:#0b2559;--navy2:#123a7a;--saffron:#ff8f1f;--green:#1f9d68;--amber:#d88900;--red:#c9302c}
+*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text)}
+.tricolor{height:4px;background:linear-gradient(90deg,#ff9933 0 33.3%,#ffffff 33.3% 66.6%,#128807 66.6% 100%)}
+header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 60%,#1a4f9c 100%);color:#fff;padding:20px 30px 18px;position:sticky;top:0;z-index:5;box-shadow:0 4px 16px #0b255933}
+.header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-badge{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--saffron),#ffb35c);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#7a3d00;box-shadow:0 2px 8px #0004;flex:none}
+header h1{margin:0;font-size:21px;letter-spacing:.2px}header p{margin:2px 0 0;color:#cfe0ff;font-size:12.5px}
+.header-meta{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:#ffffff1a;border:1px solid #ffffff33;color:#fff;padding:6px 12px;border-radius:999px;font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:#3ee08a;box-shadow:0 0 0 3px #3ee08a33}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+nav button{border:1px solid #ffffff2e;background:#ffffff0f;color:#eaf0ff;padding:8px 14px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
+nav button:hover{background:#ffffff22}
+nav button.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px #0003}
+main{padding:24px 30px 10px;max-width:1600px;margin:auto;min-height:60vh}.section{display:none}.section.active{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 2px 10px #1018280a}
+.kpi{border-top:3px solid var(--blue);position:relative}
+.kpi.acc-green{border-top-color:var(--green)}.kpi.acc-amber{border-top-color:var(--amber)}.kpi.acc-red{border-top-color:var(--red)}.kpi.acc-saffron{border-top-color:var(--saffron)}
+.kpi .value{font-size:26px;font-weight:750;margin-top:6px}.label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}.sub{font-size:11px;color:var(--muted);margin-top:8px}
+h2{margin:6px 0 16px;font-size:21px;color:var(--navy);font-weight:750;display:flex;align-items:center;gap:10px}
+h2::before{content:'';width:5px;height:20px;background:linear-gradient(180deg,var(--saffron),var(--blue));border-radius:3px}
+h3{font-size:15px;margin:0 0 8px;color:var(--navy)}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line);font-size:11.5px}
-th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right}th{background:#eef3ff;white-space:nowrap}th:first-child,td:first-child{text-align:left}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:650}.green{background:#e7f7ef;color:#18764e}.amber{background:#fff3d6;color:#8a5a00}.blue{background:#e9efff;color:#294bb5}.red{background:#fdeceb;color:#a12822}
-.progress{height:10px;background:#edf0f5;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue)}
-.barrow{display:grid;grid-template-columns:150px 1fr 95px;align-items:center;gap:10px;margin:9px 0;font-size:12px}.bar{height:11px;background:#edf0f5;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue)}
-.action{padding:12px;border-left:4px solid var(--blue);background:#fff;border-radius:8px;margin:9px 0;border:1px solid var(--line)}.action b{display:block;margin-bottom:4px}
-.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin:8px 0 12px}.small{font-size:11px;color:var(--muted)}.footer{margin:28px 0 5px;color:var(--muted);font-size:11px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right}th{background:linear-gradient(180deg,#eef3ff,#e8f0ff);color:var(--navy);white-space:nowrap;font-weight:700}th:first-child,td:first-child{text-align:left}
+tr:hover td{background:#f7faff}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}.green{background:#e7f7ef;color:#18764e}.amber{background:#fff3d6;color:#8a5a00}.blue{background:#e9efff;color:#294bb5}.red{background:#fdeceb;color:#a12822}
+.progress{height:10px;background:#edf0f5;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#5b82f2)}
+.barrow{display:grid;grid-template-columns:150px 1fr 95px;align-items:center;gap:10px;margin:9px 0;font-size:12px}.bar{height:11px;background:#edf0f5;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#6a90f5)}
+.action{padding:12px 14px;border-left:4px solid var(--blue);background:#fff;border-radius:8px;margin:9px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 1px 4px #1018280a}.action b{display:block;margin-bottom:4px;color:var(--navy)}
+.action.priority{border-left-color:var(--red)}
+.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin:8px 0 12px}.small{font-size:11px;color:var(--muted)}
 .toggle{display:flex;gap:8px;margin:8px 0 4px}.toggle button{border:1px solid var(--line);background:#fff;color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600}.toggle button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .flow-step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 auto;max-width:640px}.flow-step b{color:var(--blue);display:block;margin-bottom:4px;font-size:13.5px}.flow-step p{margin:0;font-size:12.5px;color:var(--text)}.flow-arrow{text-align:center;font-size:20px;color:var(--blue);margin:4px 0;font-weight:700}
 tfoot td{background:#f7f9fd;font-weight:700}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}main{padding:15px}}@media(max-width:560px){.grid{grid-template-columns:1fr}header{padding:18px}}
+.row-low td{background:#fdeceb!important}.row-low:hover td{background:#fbdedb!important}
+footer{margin-top:34px;background:linear-gradient(120deg,var(--navy) 0%,#123a7a 100%);color:#cfe0ff}
+.footer-inner{max-width:1600px;margin:auto;padding:26px 30px 20px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
+.footer-inner h4{color:#fff;font-size:13.5px;margin:0 0 10px;letter-spacing:.3px}
+.footer-inner p,.footer-inner li{font-size:12px;color:#b9cdf0;line-height:1.7}
+.footer-inner ul{list-style:none;padding:0;margin:0}
+.footer-bottom{border-top:1px solid #ffffff22;padding:14px 30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11.5px;color:#9fb8e6;max-width:1600px;margin:auto}
+.footer-bottom b{color:#e7edff}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}main{padding:15px}.footer-inner{grid-template-columns:1fr}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}header{padding:18px}}
 </style></head>
 <body>
-<header><h1>BIS Review Dashboard – Haryana</h1><p>Review meeting: 23-Aug-2026 | Updated with AWS Data Server snapshot dated 14-Sep-2026</p>
+<div class="tricolor"></div>
+<header>
+<div class="header-row">
+<div class="brand">
+<div class="brand-badge">AB</div>
+<div><h1>BIS Review Dashboard — Haryana</h1><p>Ayushman Bharat – Haryana Health Protection Authority (AB-HHPA) | BIS Branch</p></div>
+</div>
+<div class="header-meta">
+<span class="pill"><span class="dot"></span>Review meeting: 23-Aug-2026</span>
+<span class="pill">AWS snapshot: 14-Sep-2026</span>
+</div>
+</div>
 <nav>
 <button class="active" onclick="showTab('overview',this)">Overview</button>
 <button onclick="showTab('districts',this)">Districts</button>
@@ -39,10 +77,10 @@ tfoot td{background:#f7f9fd;font-weight:700}
 <main>
 <section id="overview" class="section active"><h2>Executive Snapshot</h2>
 <div class="grid">
-<div class="card kpi"><div class="label">Total Cards Generated</div><div class="value">1,41,65,332</div><div class="sub">AWS snapshot – 14-Sep-2026</div></div>
+<div class="card kpi acc-green"><div class="label">Total Cards Generated</div><div class="value">1,41,65,332</div><div class="sub">AWS snapshot – 14-Sep-2026</div></div>
 <div class="card kpi"><div class="label">Total Eligible Beneficiaries</div><div class="value">2,15,63,280</div><div class="sub">AWS snapshot – 14-Sep-2026</div></div>
-<div class="card kpi"><div class="label">Total Pending</div><div class="value">73,97,948</div><div class="sub">Eligible − Generated</div></div>
-<div class="card kpi"><div class="label">Overall Coverage</div><div class="value">65.69%</div><div class="sub">Generated / Eligible</div></div>
+<div class="card kpi acc-red"><div class="label">Total Pending</div><div class="value">73,97,948</div><div class="sub">Eligible − Generated</div></div>
+<div class="card kpi acc-saffron"><div class="label">Overall Coverage</div><div class="value">65.69%</div><div class="sub">Generated / Eligible</div></div>
 </div>
 <div class="two"><div class="card"><h3>Scheme-wise Snapshot – 14-Sep-2026 (Generated)</h3>
 <div class="barrow"><span>CHIRAYU</span><div class="bar"><i style="width:100%"></i></div><b>83,26,532</b></div>
@@ -101,13 +139,51 @@ tfoot td{background:#f7f9fd;font-weight:700}
 
 <section id="period" class="section"><h2>Period Card Generation — 15-Jul-2026 to 14-Sep-2026</h2>
 <div class="grid">
-<div class="card kpi"><div class="label">Total (A+C+D)</div><div class="value">1,16,014</div><div class="sub">SECC + CHIRAYU + CHIRAYU Ext. (live-API core)</div></div>
-<div class="card kpi"><div class="label">Total (A+B+C+D+E+F+G)</div><div class="value">1,38,794</div><div class="sub">All report categories, this period</div></div>
-<div class="card kpi"><div class="label">Top District</div><div class="value">Karnal</div><div class="sub">13,755 cards generated this period</div></div>
+<div class="card kpi acc-green"><div class="label">Total (A+C+D)</div><div class="value">1,16,014</div><div class="sub">SECC + CHIRAYU + CHIRAYU Ext. (live-API core)</div></div>
+<div class="card kpi acc-green"><div class="label">Total (A+B+C+D+E+F+G)</div><div class="value">1,38,794</div><div class="sub">All report categories, this period</div></div>
+<div class="card kpi acc-saffron"><div class="label">Top District</div><div class="value">Karnal</div><div class="sub">13,755 cards generated this period</div></div>
 <div class="card kpi"><div class="label">Largest Contributor Scheme</div><div class="value">CHIRAYU</div><div class="sub">93,973 of 1,38,794 (67.7%)</div></div>
 </div>
 <div class="card" style="margin-top:15px"><div style="overflow:auto"><table><thead><tr><th>District</th><th>LGD</th><th>SECC 2011 PMJAY (A)</th><th>VVS(70+) (B)</th><th>CHIRAYU (C)</th><th>CHIRAYU Ext. (D)</th><th>CCHF Emp. (E)</th><th>CCHF Pen. (F)</th><th>Divyang (G)</th><th>Total (A+C+D)</th><th>Total (A+B+C+D+E+F+G)</th></tr></thead><tbody id="periodBody"></tbody><tfoot id="periodFoot"></tfoot></table></div></div>
 <p class="small" style="margin-top:10px">Note: Report based on the NHA AWS Data Server; counts may vary. The API is live for CHIRAYU (₹0–1.80 lakh), CHIRAYU Extension (₹1.80–3.00 lakh), CCHF Employee, CCHF Pensioners and Divyang Jan Scheme, so their eligibility count may vary.</p>
+
+<div class="card" style="margin-top:20px"><h3>Action Taken Report — Card Saturation Drive (as on 11-Sep-2026)</h3>
+<div class="grid" style="margin-bottom:16px">
+<div class="card kpi" style="box-shadow:none"><div class="label">Total Eligible</div><div class="value">2,15,62,868</div></div>
+<div class="card kpi acc-green" style="box-shadow:none"><div class="label">Total Generated</div><div class="value">1,41,59,451</div></div>
+<div class="card kpi acc-red" style="box-shadow:none"><div class="label">Total Pending</div><div class="value">74,03,417</div></div>
+<div class="card kpi acc-saffron" style="box-shadow:none"><div class="label">Coverage</div><div class="value">65.66%</div></div>
+</div>
+<h3 style="margin-top:4px">Action Taken</h3>
+<ol style="margin:0 0 14px;padding-left:20px;font-size:12.5px;line-height:1.8">
+<li>Block-wise beneficiary list was compiled from the AWS/BIS data and circulated to the concerned DNOs (District Nodal Officers) and DIMs for targeted follow-up during the card generation drive.</li>
+<li>A work order was issued to CSC to support the DIU unit in the field. All Deputy Commissioners (DCs) were requested to extend support to the card saturation drives in their respective districts.</li>
+<li>As the overall saturation level was found unsatisfactory, the special camp period (originally up to 14-Sep-2026) has been extended up to <b>14-Nov-2026</b> to allow additional time for saturation.</li>
+<li>Blocks with coverage below 65% were identified from the block-wise beneficiary coverage report, and a special request was sent to the respective district DNOs/DIMs to expedite saturation in these blocks on priority.</li>
+<li>District-wise, scheme-wise and period-wise AWS reports have been shared with the field units to assist them in targeted follow-up and closing of pending cases.</li>
+</ol>
+
+<h3>Bottom 10 Blocks — Emergency Action Required</h3>
+<div style="overflow:auto"><table><thead><tr><th>Block</th><th>District</th><th>Eligible</th><th>Generated</th><th>Pending</th><th>Coverage</th></tr></thead><tbody>
+<tr class="row-low"><td>Hassanpur</td><td>Mewat</td><td>25,024</td><td>16,384</td><td>8,640</td><td>65.5%</td></tr>
+<tr class="row-low"><td>Taoru</td><td>Mewat</td><td>23,931</td><td>15,505</td><td>8,426</td><td>64.8%</td></tr>
+<tr class="row-low"><td>Hathin</td><td>Palwal</td><td>41,567</td><td>26,182</td><td>15,385</td><td>63.0%</td></tr>
+<tr class="row-low"><td>Ferozepur Jhirka</td><td>Mewat</td><td>30,415</td><td>19,049</td><td>11,366</td><td>62.6%</td></tr>
+<tr class="row-low"><td>Indri (Karnal)</td><td>Karnal</td><td>11,060</td><td>6,887</td><td>4,173</td><td>62.3%</td></tr>
+<tr class="row-low"><td>Nagina</td><td>Mewat</td><td>17,099</td><td>10,305</td><td>6,794</td><td>60.3%</td></tr>
+<tr class="row-low"><td>Nuh</td><td>Mewat</td><td>24,232</td><td>14,555</td><td>9,677</td><td>60.1%</td></tr>
+<tr class="row-low"><td>Pingwan</td><td>Mewat</td><td>23,314</td><td>13,187</td><td>10,127</td><td>56.6%</td></tr>
+<tr class="row-low"><td>Punahana</td><td>Mewat</td><td>26,744</td><td>14,869</td><td>11,875</td><td>55.6%</td></tr>
+<tr class="row-low"><td>Chirao</td><td>Mewat</td><td>3,708</td><td>1,227</td><td>2,481</td><td>33.1%</td></tr>
+</tbody></table></div>
+<p class="small" style="margin-top:8px">Source: BIS Report + SHA Data. These blocks have been specially flagged to district DNOs/DIMs for accelerated saturation. 8 of the bottom 10 blocks are in Mewat district.</p>
+
+<h3 style="margin-top:16px">Priority Focus Areas</h3>
+<div class="action priority"><b>Mewat District</b>Lowest district-wise coverage at 46.1%; contains 8 of the bottom 10 blocks statewide.</div>
+<div class="action priority"><b>Faridabad District</b>47.4% coverage — the largest pending load (7,91,828) among all districts.</div>
+<div class="action priority"><b>Palwal &amp; Gurugram Districts</b>Coverage at 57.4% and 57.2% respectively.</div>
+<div class="action priority"><b>Chirao Block (Mewat)</b>33.1% coverage — flagged as an emergency case requiring immediate camp-level intervention.</div>
+</div>
 </section>
 
 <section id="api" class="section"><h2>API / Integration Work</h2>
@@ -128,9 +204,9 @@ tfoot td{background:#f7f9fd;font-weight:700}
 <section id="pensioner" class="section"><h2>CCHF Pensioner Scheme — Status &amp; Data Flow</h2>
 <div class="grid">
 <div class="card kpi"><div class="label">AWS Eligible (BIS)</div><div class="value">33,797</div><div class="sub">14-Sep-2026 snapshot</div></div>
-<div class="card kpi"><div class="label">Cards Generated</div><div class="value">30,776</div><div class="sub">Coverage 91.06%</div></div>
-<div class="card kpi"><div class="label">Pending (AWS)</div><div class="value">3,021</div><div class="sub">Against AWS eligible base</div></div>
-<div class="card kpi"><div class="label">Actual Pensioners (Treasury+Bank)</div><div class="value">2,17,576</div><div class="sub">As confirmed by Treasury response</div></div>
+<div class="card kpi acc-green"><div class="label">Cards Generated</div><div class="value">30,776</div><div class="sub">Coverage 91.06%</div></div>
+<div class="card kpi acc-red"><div class="label">Pending (AWS)</div><div class="value">3,021</div><div class="sub">Against AWS eligible base</div></div>
+<div class="card kpi acc-saffron"><div class="label">Actual Pensioners (Treasury+Bank)</div><div class="value">2,17,576</div><div class="sub">As confirmed by Treasury response</div></div>
 </div>
 
 <div class="card" style="margin-top:16px"><h3>Actual Pensioner Count — Treasury Response</h3>
@@ -171,8 +247,32 @@ tfoot td{background:#f7f9fd;font-weight:700}
 <div class="action"><b>9. PVC / DM Training</b>Conduct DM-level training following the PVC letter, to ensure smooth card delivery at the district level.</div>
 <div class="action"><b>7. VVS (70+)</b>VVS coverage stands at only 15.91% against eligible base; flag for targeted follow-up given the large pending count (13,00,357).</div>
 </section>
-<div class="footer">Prepared for BIS review meeting | Figures reproduced from reports/screenshots shared | AWS/NHA counts may vary.</div>
 </main>
+<footer>
+<div class="footer-inner">
+<div>
+<h4>Ayushman Bharat – Haryana Health Protection Authority</h4>
+<p>Beneficiary Identification System (BIS) Branch — internal review dashboard prepared for the BIS review meeting. Figures are reproduced from AWS/NHA data server reports and screenshots shared for review; counts may vary dynamically on subsequent pulls.</p>
+</div>
+<div>
+<h4>Reference Portals</h4>
+<ul>
+<li>Ayushman Bharat Haryana</li>
+<li>NHA Public Dashboard</li>
+<li>Beneficiary Identification System (BIS)</li>
+</ul>
+</div>
+<div>
+<h4>Report Coverage</h4>
+<ul>
+<li>AWS snapshot: 14-Sep-2026</li>
+<li>Period: 15-Jul to 14-Sep-2026</li>
+<li>Family coverage: 07-Sep-2026</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom"><span>© Ayushman Bharat Haryana Health Protection Authority (AB-HHPA) — <b>For internal review use only</b></span><span>Dashboard prepared for BIS review meeting</span></div>
+</footer>
 <script>
 const DATA_GEN=[{"district": "Ambala", "lgd": "58", "secc": 188464, "tagged": 60237, "vvs": 16269, "chirayu": 350492, "ext": 3499, "cchfe": 3766, "cchfp": 2168, "asha": 2398, "ah": 2368, "aw": 1484, "divyang": 0, "total": 631145}, {"district": "Bhiwani", "lgd": "59", "secc": 183647, "tagged": 76809, "vvs": 9031, "chirayu": 445863, "ext": 1954, "cchfe": 5430, "cchfp": 1412, "asha": 952, "ah": 2726, "aw": 1840, "divyang": 3, "total": 729667}, {"district": "Faridabad", "lgd": "60", "secc": 118488, "tagged": 88238, "vvs": 19042, "chirayu": 480328, "ext": 874, "cchfe": 1453, "cchfp": 506, "asha": 1204, "ah": 1729, "aw": 1146, "divyang": 2, "total": 713010}, {"district": "Fatehabad", "lgd": "61", "secc": 178843, "tagged": 58061, "vvs": 8316, "chirayu": 336473, "ext": 2948, "cchfe": 2677, "cchfp": 884, "asha": 1034, "ah": 1574, "aw": 1254, "divyang": 1, "total": 592065}, {"district": "Gurugram", "lgd": "62", "secc": 118593, "tagged": 66146, "vvs": 22844, "chirayu": 301032, "ext": 1856, "cchfe": 2461, "cchfp": 1235, "asha": 1337, "ah": 1914, "aw": 1143, "divyang": 1, "total": 518562}, {"district": "Hisar", "lgd": "63", "secc": 307120, "tagged": 109853, "vvs": 11617, "chirayu": 631196, "ext": 3984, "cchfe": 7749, "cchfp": 2781, "asha": 2443, "ah": 3066, "aw": 2193, "divyang": 1, "total": 1082003}, {"district": "Jhajjar", "lgd": "64", "secc": 105919, "tagged": 52262, "vvs": 10039, "chirayu": 301338, "ext": 1650, "cchfe": 4806, "cchfp": 954, "asha": 1316, "ah": 2156, "aw": 1429, "divyang": 2, "total": 481871}, {"district": "Jind", "lgd": "65", "secc": 224545, "tagged": 78841, "vvs": 9303, "chirayu": 466080, "ext": 2432, "cchfe": 6238, "cchfp": 1593, "asha": 1720, "ah": 2892, "aw": 1933, "divyang": 0, "total": 795577}, {"district": "Kaithal", "lgd": "66", "secc": 257115, "tagged": 54412, "vvs": 10133, "chirayu": 335915, "ext": 2887, "cchfe": 3890, "cchfp": 886, "asha": 964, "ah": 2052, "aw": 1818, "divyang": 1, "total": 670073}, {"district": "Karnal", "lgd": "67", "secc": 349909, "tagged": 76794, "vvs": 15832, "chirayu": 471739, "ext": 3762, "cchfe": 4395, "cchfp": 2178, "asha": 1202, "ah": 2773, "aw": 2315, "divyang": 5, "total": 930904}, {"district": "Kurukshetra", "lgd": "68", "secc": 225929, "tagged": 52643, "vvs": 12578, "chirayu": 302526, "ext": 3304, "cchfe": 3686, "cchfp": 1845, "asha": 837, "ah": 2188, "aw": 1494, "divyang": 2, "total": 607032}, {"district": "Mahendergarh", "lgd": "69", "secc": 146080, "tagged": 56548, "vvs": 10263, "chirayu": 318020, "ext": 1030, "cchfe": 5611, "cchfp": 1713, "asha": 1250, "ah": 2723, "aw": 1785, "divyang": 0, "total": 545023}, {"district": "Panchkula", "lgd": "70", "secc": 52312, "tagged": 27340, "vvs": 9598, "chirayu": 156677, "ext": 573, "cchfe": 2214, "cchfp": 654, "asha": 454, "ah": 617, "aw": 799, "divyang": 0, "total": 251238}, {"district": "Panipat", "lgd": "71", "secc": 178022, "tagged": 84515, "vvs": 9937, "chirayu": 493727, "ext": 2512, "cchfe": 3184, "cchfp": 951, "asha": 1204, "ah": 1895, "aw": 1441, "divyang": 1, "total": 777389}, {"district": "Rewari", "lgd": "72", "secc": 113928, "tagged": 49977, "vvs": 9366, "chirayu": 276214, "ext": 923, "cchfe": 4777, "cchfp": 1581, "asha": 1195, "ah": 1863, "aw": 1577, "divyang": 0, "total": 461401}, {"district": "Rohtak", "lgd": "73", "secc": 123030, "tagged": 58589, "vvs": 10521, "chirayu": 328915, "ext": 1602, "cchfe": 6047, "cchfp": 2285, "asha": 1134, "ah": 1754, "aw": 1365, "divyang": 0, "total": 535242}, {"district": "Sirsa", "lgd": "74", "secc": 206409, "tagged": 79709, "vvs": 11577, "chirayu": 459742, "ext": 4194, "cchfe": 3837, "cchfp": 2002, "asha": 1896, "ah": 2266, "aw": 1715, "divyang": 4, "total": 773351}, {"district": "Sonipat", "lgd": "75", "secc": 183943, "tagged": 83100, "vvs": 13742, "chirayu": 468361, "ext": 1836, "cchfe": 5859, "cchfp": 1932, "asha": 1722, "ah": 2391, "aw": 1865, "divyang": 1, "total": 764752}, {"district": "Yamunanagar", "lgd": "76", "secc": 276091, "tagged": 69593, "vvs": 13395, "chirayu": 417753, "ext": 2806, "cchfe": 2786, "cchfp": 1665, "asha": 1170, "ah": 2766, "aw": 1973, "divyang": 1, "total": 789999}, {"district": "Mewat", "lgd": "604", "secc": 110065, "tagged": 69707, "vvs": 1826, "chirayu": 427005, "ext": 751, "cchfe": 1132, "cchfp": 375, "asha": 2622, "ah": 1675, "aw": 1477, "divyang": 0, "total": 616635}, {"district": "Palwal", "lgd": "619", "secc": 145595, "tagged": 62315, "vvs": 5960, "chirayu": 374815, "ext": 458, "cchfe": 2202, "cchfp": 549, "asha": 1275, "ah": 1635, "aw": 1078, "divyang": 0, "total": 595882}, {"district": "Charkhi Dadri", "lgd": "701", "secc": 75076, "tagged": 32539, "vvs": 4575, "chirayu": 180270, "ext": 649, "cchfe": 2770, "cchfp": 620, "asha": 699, "ah": 1387, "aw": 947, "divyang": 0, "total": 299532}, {"district": "Hansi", "lgd": "792", "secc": 348, "tagged": 3, "vvs": 318, "chirayu": 2051, "ext": 227, "cchfe": 5, "cchfp": 7, "asha": 1, "ah": 5, "aw": 14, "divyang": 0, "total": 2979}];
 const DATA_ELIG=[{"district": "Ambala", "lgd": "58", "secc": 239543, "tagged": 72834, "vvs": 76275, "chirayu": 483463, "ext": 3499, "cchfe": 3836, "cchfp": 2312, "asha": 2914, "ah": 3073, "aw": 2324, "divyang": 0, "total": 890073}, {"district": "Bhiwani", "lgd": "59", "secc": 239110, "tagged": 90372, "vvs": 73581, "chirayu": 591921, "ext": 1954, "cchfe": 5618, "cchfp": 1732, "asha": 1166, "ah": 3523, "aw": 2792, "divyang": 3, "total": 1011772}, {"district": "Faridabad", "lgd": "60", "secc": 189996, "tagged": 113567, "vvs": 79540, "chirayu": 1109671, "ext": 874, "cchfe": 1479, "cchfp": 562, "asha": 2348, "ah": 3403, "aw": 2912, "divyang": 2, "total": 1504354}, {"district": "Fatehabad", "lgd": "61", "secc": 236783, "tagged": 70710, "vvs": 62131, "chirayu": 464143, "ext": 2948, "cchfe": 2787, "cchfp": 938, "asha": 1288, "ah": 2107, "aw": 1909, "divyang": 1, "total": 845745}, {"district": "Gurugram", "lgd": "62", "secc": 156650, "tagged": 79925, "vvs": 70777, "chirayu": 586451, "ext": 1856, "cchfe": 2525, "cchfp": 1355, "asha": 1775, "ah": 2852, "aw": 2109, "divyang": 1, "total": 906276}, {"district": "Hisar", "lgd": "63", "secc": 392482, "tagged": 129107, "vvs": 100617, "chirayu": 850841, "ext": 3984, "cchfe": 8047, "cchfp": 3114, "asha": 2844, "ah": 3899, "aw": 3430, "divyang": 1, "total": 1498366}, {"district": "Jhajjar", "lgd": "64", "secc": 145591, "tagged": 62176, "vvs": 65601, "chirayu": 443000, "ext": 1650, "cchfe": 4930, "cchfp": 1046, "asha": 1759, "ah": 2830, "aw": 2084, "divyang": 2, "total": 730669}, {"district": "Jind", "lgd": "65", "secc": 296553, "tagged": 95655, "vvs": 84302, "chirayu": 636425, "ext": 2432, "cchfe": 6444, "cchfp": 1725, "asha": 2113, "ah": 3874, "aw": 3006, "divyang": 0, "total": 1132529}, {"district": "Kaithal", "lgd": "66", "secc": 347321, "tagged": 65275, "vvs": 76170, "chirayu": 463314, "ext": 2887, "cchfe": 4013, "cchfp": 994, "asha": 1224, "ah": 2790, "aw": 2665, "divyang": 1, "total": 966654}, {"district": "Karnal", "lgd": "67", "secc": 444412, "tagged": 91211, "vvs": 94475, "chirayu": 637911, "ext": 3762, "cchfe": 4528, "cchfp": 2368, "asha": 1510, "ah": 3385, "aw": 2830, "divyang": 5, "total": 1286397}, {"district": "Kurukshetra", "lgd": "68", "secc": 289329, "tagged": 61803, "vvs": 70153, "chirayu": 406051, "ext": 3304, "cchfe": 3826, "cchfp": 1988, "asha": 1011, "ah": 2930, "aw": 2288, "divyang": 2, "total": 842685}, {"district": "Mahendergarh", "lgd": "69", "secc": 183137, "tagged": 65208, "vvs": 73791, "chirayu": 410032, "ext": 1030, "cchfe": 5861, "cchfp": 1874, "asha": 1467, "ah": 3415, "aw": 2438, "divyang": 0, "total": 748253}, {"district": "Panchkula", "lgd": "70", "secc": 73907, "tagged": 34508, "vvs": 29528, "chirayu": 257179, "ext": 573, "cchfe": 2338, "cchfp": 700, "asha": 604, "ah": 899, "aw": 1128, "divyang": 1, "total": 401365}, {"district": "Panipat", "lgd": "71", "secc": 219420, "tagged": 103324, "vvs": 61369, "chirayu": 724206, "ext": 2512, "cchfe": 3319, "cchfp": 1042, "asha": 1515, "ah": 2426, "aw": 1958, "divyang": 1, "total": 1121092}, {"district": "Rewari", "lgd": "72", "secc": 144521, "tagged": 58898, "vvs": 58452, "chirayu": 388194, "ext": 923, "cchfe": 4910, "cchfp": 1661, "asha": 1447, "ah": 2375, "aw": 2066, "divyang": 0, "total": 663447}, {"district": "Rohtak", "lgd": "73", "secc": 167087, "tagged": 71953, "vvs": 70497, "chirayu": 490774, "ext": 1602, "cchfe": 6201, "cchfp": 2572, "asha": 1483, "ah": 2369, "aw": 1901, "divyang": 1, "total": 816440}, {"district": "Sirsa", "lgd": "74", "secc": 279252, "tagged": 98745, "vvs": 82875, "chirayu": 653814, "ext": 4194, "cchfe": 3972, "cchfp": 2178, "asha": 2359, "ah": 2998, "aw": 2335, "divyang": 4, "total": 1132726}, {"district": "Sonipat", "lgd": "75", "secc": 249489, "tagged": 101912, "vvs": 87818, "chirayu": 726012, "ext": 1836, "cchfe": 6033, "cchfp": 2098, "asha": 2321, "ah": 3260, "aw": 2713, "divyang": 1, "total": 1183493}, {"district": "Yamunanagar", "lgd": "76", "secc": 341787, "tagged": 83782, "vvs": 76334, "chirayu": 576205, "ext": 2806, "cchfe": 2878, "cchfp": 1831, "asha": 1402, "ah": 3520, "aw": 2724, "divyang": 1, "total": 1093270}, {"district": "Mewat", "lgd": "604", "secc": 181060, "tagged": 107412, "vvs": 52621, "chirayu": 982112, "ext": 751, "cchfe": 1175, "cchfp": 407, "asha": 4412, "ah": 3064, "aw": 2563, "divyang": 0, "total": 1335577}, {"district": "Palwal", "lgd": "619", "secc": 215499, "tagged": 83255, "vvs": 60577, "chirayu": 668092, "ext": 458, "cchfe": 2257, "cchfp": 610, "asha": 1748, "ah": 2564, "aw": 2077, "divyang": 0, "total": 1037137}, {"district": "Charkhi Dadri", "lgd": "701", "secc": 94300, "tagged": 37630, "vvs": 38637, "chirayu": 233308, "ext": 649, "cchfe": 2867, "cchfp": 683, "asha": 818, "ah": 1768, "aw": 1320, "divyang": 1, "total": 411981}, {"district": "Hansi", "lgd": "792", "secc": 348, "tagged": 3, "vvs": 318, "chirayu": 2051, "ext": 227, "cchfe": 5, "cchfp": 7, "asha": 1, "ah": 5, "aw": 14, "divyang": 0, "total": 2979}];
@@ -208,3 +308,4 @@ function renderDistricts(){
 }
 renderDistricts();
 </script></body></html>
+
