@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b2d4f">
+<title>BIS Review Dashboard — Enhanced View</title>
+<style>
+:root{color-scheme:light;--navy:#0b2d4f;--blue:#155e9a;--ink:#172b3a;--muted:#607487;--line:#dce5ed;--surface:#fff;--page:#f2f6fa}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.topbar{position:sticky;top:0;z-index:1000;background:var(--navy);color:#fff;padding:12px 16px;box-shadow:0 3px 14px #102d4926}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-weight:750;font-size:16px;letter-spacing:.2px}.sub{font-size:12px;color:#d7e5f3;margin-top:2px}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.searchwrap{position:relative;flex:1;min-width:230px;max-width:560px}.searchwrap input{width:100%;border:1px solid #c6d5e4;border-radius:9px;padding:10px 12px 10px 36px;font:inherit;background:#fff;color:#172b3a;outline:none}.searchwrap input:focus{box-shadow:0 0 0 3px #6fb5f766;border-color:#82b8e7}.searchicon{position:absolute;left:12px;top:9px;color:#536d82}
+button,.linkbtn{font:600 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;border:1px solid #b8c9d8;border-radius:8px;padding:10px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+button.primary{background:#fff;color:var(--navy);border-color:#fff}button.secondary{background:#173e60;color:#fff;border-color:#52728f}button:hover{filter:brightness(1.07)}button:focus-visible{outline:3px solid #91caff;outline-offset:2px}
+.status{font-size:12px;color:#d9e8f6;min-width:110px}.framewrap{padding:0;height:calc(100vh - 112px)}iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+body.present .topbar{display:none}body.present .framewrap{height:100vh}
+body.dark{--page:#101923;--surface:#182634;--ink:#e7eef5;--muted:#a9bac9;--line:#34495a}
+@media(max-width:620px){.topbar{padding:10px}.brand{font-size:14px}.framewrap{height:calc(100vh - 164px)}.tools{gap:6px}.tools button{padding:9px}.searchwrap{min-width:100%;max-width:none;order:-1}}
+@media print{.topbar{display:none!important}.framewrap{height:auto!important;padding:0}iframe{height:auto;min-height:100vh}}
+</style>
+</head>
+<body>
+<header class="topbar" id="toolbar">
+ <div class="brandrow"><div><div class="brand">BIS Review Dashboard <span style="font-weight:500">· Enhanced View</span></div><div class="sub">Search • Dark mode • Print/PDF • Presentation</div></div><a class="linkbtn" href="./index.html" style="background:#173e60;color:white;border-color:#52728f">Open original ↗</a></div>
+ <div class="tools">
+  <div class="searchwrap"><span class="searchicon">⌕</span><input id="globalSearch" type="search" placeholder="Search blocks, MCs, districts, figures…" aria-label="Search dashboard"></div>
+  <button class="primary" id="clearSearch" type="button">Clear search</button>
+  <button class="secondary" id="darkToggle" type="button" aria-pressed="false">◐ Dark mode</button>
+  <button class="secondary" id="printBtn" type="button">⎙ Print / PDF</button>
+  <button class="secondary" id="presentBtn" type="button">⛶ Presentation</button>
+  <span class="status" id="status" role="status" aria-live="polite">Loading dashboard…</span>
+ </div>
+</header>
+<main class="framewrap"><iframe id="dashboard" title="Original BIS Review Dashboard" src="./index.html"></iframe></main>
+<script>
+(function(){
+ const frame=document.getElementById('dashboard'), search=document.getElementById('globalSearch'), status=document.getElementById('status');
+ let ready=false, dark=false, presentation=false, originalDisplay=new WeakMap(), injected=null;
+ function doc(){try{return frame.contentDocument}catch(e){return null}}
+ function setStatus(s){status.textContent=s}
+ function injectDark(){
+  const d=doc(); if(!d||!d.head)return;
+  if(!injected||!injected.isConnected){injected=d.createElement('style');injected.id='bis-enhanced-dark-style';d.head.appendChild(injected)}
+  injected.textContent=dark? `
+  html,body{background:#111923!important;color:#e6edf4!important}
+  body,main,section,article,div,header,footer{scrollbar-color:#526779 #182633}
+  table{color:#e6edf4!important;border-color:#3a4d5d!important}
+  th{background:#20384c!important;color:#f5f8fb!important}
+  td,th,tr{border-color:#3a4d5d!important}
+  tr:nth-child(even){background-color:#1b2b39!important}
+  input,select,textarea{background:#172635!important;color:#e6edf4!important;border-color:#526779!important}
+  .card,.panel,.chart-container,.stat-card{background:#182735!important;color:#e6edf4!important;border-color:#3a4d5d!important}
+  a{color:#8ec9ff!important}
+  `:'';
+ }
+ function searchableNodes(d){
+  const tables=[...d.querySelectorAll('table')];
+  const rows=tables.flatMap(t=>[...t.querySelectorAll('tr')]).filter(r=>r.querySelectorAll('th,td').length);
+  if(rows.length)return {kind:'rows',items:rows};
+  const candidates=[...d.querySelectorAll('section,article,[class*="card"],[class*="panel"],li')].filter(el=>el.innerText&&el.innerText.trim().length>8);
+  return {kind:'sections',items:candidates};
+ }
+ function runSearch(){
+  const d=doc(); if(!d)return;
+  const q=search.value.trim().toLocaleLowerCase();
+  const all=searchableNodes(d);
+  let matches=0;
+  all.items.forEach(el=>{
+   if(!originalDisplay.has(el))originalDisplay.set(el,el.style.display);
+   const show=!q||el.innerText.toLocaleLowerCase().includes(q);
+   el.style.display=show?originalDisplay.get(el):'none';
+   if(show&&q)matches++;
+  });
+  setStatus(q?(matches+' matching '+(all.kind==='rows'?'rows':'sections')):'Dashboard ready');
+ }
+ frame.addEventListener('load',function(){
+  ready=true; injectDark(); runSearch();
+  const d=doc(); if(d){const t=d.title||'BIS Review Dashboard';document.title=t+' — Enhanced View'}
+ });
+ search.addEventListener('input',runSearch);
+ document.getElementById('clearSearch').addEventListener('click',function(){search.value='';runSearch();search.focus()});
+ document.getElementById('darkToggle').addEventListener('click',function(){dark=!dark;document.body.classList.toggle('dark',dark);this.setAttribute('aria-pressed',String(dark));this.textContent=dark?'☀ Light mode':'◐ Dark mode';injectDark()});
+ document.getElementById('printBtn').addEventListener('click',function(){try{frame.contentWindow.focus();frame.contentWindow.print()}catch(e){window.print()}});
+ document.getElementById('presentBtn').addEventListener('click',function(){presentation=!presentation;document.body.classList.toggle('present',presentation);this.textContent=presentation?'✕ Exit presentation':'⛶ Presentation';if(presentation&&document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{})}else if(!presentation&&document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(()=>{})}});
+ document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus()}if(e.key==='Escape'&&presentation){presentation=false;document.body.classList.remove('present');document.getElementById('presentBtn').textContent='⛶ Presentation';if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}});
+})();
+</script>
+</body>
+</html>
