@@ -16,18 +16,18 @@ button,.linkbtn{font:600 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
 button.primary{background:#fff;color:var(--navy);border-color:#fff}button.secondary{background:#173e60;color:#fff;border-color:#52728f}button:hover{filter:brightness(1.07)}button:focus-visible{outline:3px solid #91caff;outline-offset:2px}
 .status{font-size:12px;color:#d9e8f6;min-width:110px}.framewrap{padding:0;height:calc(100vh - 112px)}iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 body.present .topbar{display:none}body.present .framewrap{height:100vh}
-body.dark{--page:#101923;--surface:#182634;--ink:#e7eef5;--muted:#a9bac9;--line:#34495a}
 @media(max-width:620px){.topbar{padding:10px}.brand{font-size:14px}.framewrap{height:calc(100vh - 164px)}.tools{gap:6px}.tools button{padding:9px}.searchwrap{min-width:100%;max-width:none;order:-1}}
 @media print{.topbar{display:none!important}.framewrap{height:auto!important;padding:0}iframe{height:auto;min-height:100vh}}
 </style>
 </head>
 <body>
 <header class="topbar" id="toolbar">
- <div class="brandrow"><div><div class="brand">BIS Review Dashboard <span style="font-weight:500">· Enhanced View</span></div><div class="sub">Search • Dark mode • Print/PDF • Presentation</div></div><a class="linkbtn" href="./index.html" style="background:#173e60;color:white;border-color:#52728f">Open original ↗</a></div>
+ <div class="brandrow"><div><div class="brand">BIS Review Dashboard <span style="font-weight:500">· Enhanced View</span></div><div class="sub">Search • Accessible dark mode • Export visible data • Print/PDF • Presentation</div></div><a class="linkbtn" href="./index.html" style="background:#173e60;color:white;border-color:#52728f">Open original ↗</a></div>
  <div class="tools">
-  <div class="searchwrap"><span class="searchicon">⌕</span><input id="globalSearch" type="search" placeholder="Search blocks, MCs, districts, figures…" aria-label="Search dashboard"></div>
+  <div class="searchwrap"><span class="searchicon">⌕</span><input id="globalSearch" type="search" placeholder="Search blocks, MCs, districts, figures… (Ctrl+K)" aria-label="Search dashboard"></div>
   <button class="primary" id="clearSearch" type="button">Clear search</button>
   <button class="secondary" id="darkToggle" type="button" aria-pressed="false">◐ Dark mode</button>
+  <button class="secondary" id="exportBtn" type="button">⇩ Export CSV</button>
   <button class="secondary" id="printBtn" type="button">⎙ Print / PDF</button>
   <button class="secondary" id="presentBtn" type="button">⛶ Presentation</button>
   <span class="status" id="status" role="status" aria-live="polite">Loading dashboard…</span>
@@ -37,22 +37,28 @@ body.dark{--page:#101923;--surface:#182634;--ink:#e7eef5;--muted:#a9bac9;--line:
 <script>
 (function(){
  const frame=document.getElementById('dashboard'), search=document.getElementById('globalSearch'), status=document.getElementById('status');
- let ready=false, dark=false, presentation=false, originalDisplay=new WeakMap(), injected=null;
+ let dark=false, presentation=false, originalDisplay=new WeakMap(), injected=null;
  function doc(){try{return frame.contentDocument}catch(e){return null}}
  function setStatus(s){status.textContent=s}
  function injectDark(){
   const d=doc(); if(!d||!d.head)return;
   if(!injected||!injected.isConnected){injected=d.createElement('style');injected.id='bis-enhanced-dark-style';d.head.appendChild(injected)}
   injected.textContent=dark? `
-  html,body{background:#111923!important;color:#e6edf4!important}
-  body,main,section,article,div,header,footer{scrollbar-color:#526779 #182633}
-  table{color:#e6edf4!important;border-color:#3a4d5d!important}
-  th{background:#20384c!important;color:#f5f8fb!important}
-  td,th,tr{border-color:#3a4d5d!important}
-  tr:nth-child(even){background-color:#1b2b39!important}
-  input,select,textarea{background:#172635!important;color:#e6edf4!important;border-color:#526779!important}
-  .card,.panel,.chart-container,.stat-card{background:#182735!important;color:#e6edf4!important;border-color:#3a4d5d!important}
-  a{color:#8ec9ff!important}
+  :root{color-scheme:dark!important}
+  html,body{background:#101820!important;color:#e8eef5!important}
+  body{color:#e8eef5!important}
+  body *:not(svg):not(path):not(canvas):not(img){color:#e8eef5}
+  h1,h2,h3,h4,h5,h6,strong,b,th,label,legend{color:#f7faff!important}
+  p,li,small,span,div,section,article,main,aside,footer{border-color:#3b4d5d}
+  table{background:#17232e!important;color:#e8eef5!important;border-color:#405365!important}
+  thead,th{background:#263b4c!important;color:#ffffff!important}
+  td{background-color:transparent!important;color:#e8eef5!important}
+  tr:nth-child(even){background-color:#1d2b38!important}
+  input,select,textarea,button{background:#243746!important;color:#ffffff!important;border-color:#61788b!important}
+  a{color:#8ecbff!important}
+  [style*="background"],[class*="card"],[class*="panel"],[class*="box"],[class*="stat"],[class*="summary"],[class*="tile"]{background-color:#1b2a37!important;color:#e8eef5!important;border-color:#405365!important}
+  svg text{fill:#e8eef5!important}
+  .highcharts-background,.plotly,.js-plotly-plot{background:transparent!important}
   `:'';
  }
  function searchableNodes(d){
@@ -60,12 +66,11 @@ body.dark{--page:#101923;--surface:#182634;--ink:#e7eef5;--muted:#a9bac9;--line:
   const rows=tables.flatMap(t=>[...t.querySelectorAll('tr')]).filter(r=>r.querySelectorAll('th,td').length);
   if(rows.length)return {kind:'rows',items:rows};
   const candidates=[...d.querySelectorAll('section,article,[class*="card"],[class*="panel"],li')].filter(el=>el.innerText&&el.innerText.trim().length>8);
-  return {kind:'sections',items:candidates};
+  return {kind:'sections',items:[...new Set(candidates)]};
  }
  function runSearch(){
   const d=doc(); if(!d)return;
-  const q=search.value.trim().toLocaleLowerCase();
-  const all=searchableNodes(d);
+  const q=search.value.trim().toLocaleLowerCase(), all=searchableNodes(d);
   let matches=0;
   all.items.forEach(el=>{
    if(!originalDisplay.has(el))originalDisplay.set(el,el.style.display);
@@ -75,13 +80,28 @@ body.dark{--page:#101923;--surface:#182634;--ink:#e7eef5;--muted:#a9bac9;--line:
   });
   setStatus(q?(matches+' matching '+(all.kind==='rows'?'rows':'sections')):'Dashboard ready');
  }
- frame.addEventListener('load',function(){
-  ready=true; injectDark(); runSearch();
-  const d=doc(); if(d){const t=d.title||'BIS Review Dashboard';document.title=t+' — Enhanced View'}
- });
+ function csvEscape(value){return '"'+String(value??'').replace(/"/g,'""')+'"'}
+ function exportCSV(){
+  const d=doc(); if(!d){setStatus('Dashboard not ready');return}
+  const tables=[...d.querySelectorAll('table')];
+  if(!tables.length){setStatus('No table found to export');return}
+  const rows=[];
+  tables.forEach((table,ti)=>{
+   const visible=[...table.querySelectorAll('tr')].filter(tr=>tr.getClientRects().length&&tr.style.display!=='none');
+   if(!visible.length)return;
+   if(tables.length>1)rows.push([csvEscape('Table '+(ti+1))].join(','));
+   visible.forEach(tr=>rows.push([...tr.querySelectorAll('th,td')].map(cell=>csvEscape(cell.innerText.trim())).join(',')));
+   rows.push('');
+  });
+  if(!rows.length){setStatus('No visible table rows to export');return}
+  const blob=new Blob(['\ufeff'+rows.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');a.href=url;a.download='BIS_Review_Dashboard_visible_data.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setStatus('CSV export prepared');
+ }
+ frame.addEventListener('load',function(){injectDark();runSearch();const d=doc();if(d){document.title=(d.title||'BIS Review Dashboard')+' — Enhanced View'}});
  search.addEventListener('input',runSearch);
  document.getElementById('clearSearch').addEventListener('click',function(){search.value='';runSearch();search.focus()});
- document.getElementById('darkToggle').addEventListener('click',function(){dark=!dark;document.body.classList.toggle('dark',dark);this.setAttribute('aria-pressed',String(dark));this.textContent=dark?'☀ Light mode':'◐ Dark mode';injectDark()});
+ document.getElementById('darkToggle').addEventListener('click',function(){dark=!dark;this.setAttribute('aria-pressed',String(dark));this.textContent=dark?'☀ Light mode':'◐ Dark mode';injectDark();setStatus(dark?'Dark mode enabled':'Light mode enabled')});
+ document.getElementById('exportBtn').addEventListener('click',exportCSV);
  document.getElementById('printBtn').addEventListener('click',function(){try{frame.contentWindow.focus();frame.contentWindow.print()}catch(e){window.print()}});
  document.getElementById('presentBtn').addEventListener('click',function(){presentation=!presentation;document.body.classList.toggle('present',presentation);this.textContent=presentation?'✕ Exit presentation':'⛶ Presentation';if(presentation&&document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{})}else if(!presentation&&document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(()=>{})}});
  document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus()}if(e.key==='Escape'&&presentation){presentation=false;document.body.classList.remove('present');document.getElementById('presentBtn').textContent='⛶ Presentation';if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}});
