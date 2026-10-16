@@ -47,21 +47,17 @@ body.present .topbar{display:none}body.present .framewrap{height:100vh}
   :root{color-scheme:dark!important}
   html,body{background:#101820!important;color:#e8eef5!important}
   body{color:#e8eef5!important}
-  body *:not(svg):not(path):not(canvas):not(img){color:#e8eef5}
-  /* Keep dashboard charts visible in dark mode: avoid forcing hover backgrounds on every element */
-  body *:hover{color:#e8eef5!important}
-  body a:hover,body button:hover{background-color:#34536b!important;color:#ffffff!important}
-  body tr:hover,body tr:hover td,body tr:hover th{background-color:#263b4c!important;color:#ffffff!important}
-  body input:hover,body select:hover,body textarea:hover{background-color:#1b2a37!important;color:#ffffff!important}
-  h1,h2,h3,h4,h5,h6,strong,b,th,label,legend{color:#f7faff!important}
-  p,li,small,span,div,section,article,main,aside,footer{border-color:#3b4d5d}
+  /* Text contrast only: do not repaint every inline-background element or chart bar */
+  h1,h2,h3,h4,h5,h6,p,li,small,span,label,legend,th,td,strong,b{color:#e8eef5!important}
+  a{color:#8ecbff!important}
   table{background:#17232e!important;color:#e8eef5!important;border-color:#405365!important}
   thead,th{background:#263b4c!important;color:#ffffff!important}
-  td{background-color:transparent!important;color:#e8eef5!important}
+  td{color:#e8eef5!important;border-color:#405365!important}
   tr:nth-child(even){background-color:#1d2b38!important}
-  input,select,textarea,button{background:#243746!important;color:#ffffff!important;border-color:#61788b!important}
-  a{color:#8ecbff!important}
-  [style*="background"],[class*="card"],[class*="panel"],[class*="box"],[class*="stat"],[class*="summary"],[class*="tile"]{background-color:#1b2a37!important;color:#e8eef5!important;border-color:#405365!important}
+  input,select,textarea{background:#243746!important;color:#ffffff!important;border-color:#61788b!important}
+  button{color:#ffffff!important;border-color:#61788b!important}
+  body a:hover,body button:hover{color:#ffffff!important}
+  body tr:hover,body tr:hover td,body tr:hover th{background-color:#263b4c!important;color:#ffffff!important}
   svg text{fill:#e8eef5!important}
   .highcharts-background,.plotly,.js-plotly-plot{background:transparent!important}
   `:'';
